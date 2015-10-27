@@ -16,7 +16,11 @@ gulp.task('nodemon', function (cb) {
     script: 'app.js',
 
     // watch core server file(s) that require server restart on change
-    watch: ['app.js', 'server/*.js']
+    watch: [
+      'app.js',
+      'routes/*.js',
+      'lib/*.js'
+    ]
   })
     .on('start', function onStart() {
       // ensure start only got called once

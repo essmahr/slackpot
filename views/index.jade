@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1 testing
+
+  form(action='/post-message', method='POST')
+    input(type='text', name='message')
+    input(type='submit', value ='submit')

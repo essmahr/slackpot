@@ -1,9 +1,9 @@
-var env = require('../env');
 var express = require('express');
-var router = express.Router();
 var slackbot = require('../lib/slackpot');
+var token = require('../lib/slackToken');
+var router = express.Router();
 
-var bot = new slackbot(env.accessToken);
+var bot = new slackbot(token);
 
 router.get('/', function(req, res, next) {
   res.render('index');

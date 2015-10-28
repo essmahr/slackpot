@@ -55,10 +55,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var port = process.env.PORT || 3000;
 
-var server = http.createServer(app);
+app.listen(port);
 
-server.listen(3000, 'localhost');
-server.on('listening', function() {
-  console.log('Express server started on port %s at %s', server.address().port, server.address().address);
-});
+console.log("Listening on port " + port);

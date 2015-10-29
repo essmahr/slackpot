@@ -73,5 +73,5 @@ gulp.task('bs-reload', function () {
 gulp.task('default', ['browser-sync'], function () {
   gulp.watch('public/**/*.js',   ['js', browserSync.reload]);
   gulp.watch('public/**/*.css',  ['css']);
-  gulp.watch('public/**/*.html', ['bs-reload']);
+  gulp.watch('views/*.jade', ['bs-reload']);
 });

@@ -7,4 +7,4 @@ var botSchema = mongoose.Schema({
   channel: String
 });
 
-module.exports = mongoose.model('Bot', settingsSchema);
+module.exports = mongoose.model('Bot', botSchema);

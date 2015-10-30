@@ -18,6 +18,7 @@ gulp.task('nodemon', function (cb) {
     // watch core server file(s) that require server restart on change
     watch: [
       'app.js',
+      'models/*.js',
       'routes/*.js',
       'lib/*.js'
     ]
@@ -73,5 +74,5 @@ gulp.task('bs-reload', function () {
 gulp.task('default', ['browser-sync'], function () {
   gulp.watch('public/**/*.js',   ['js', browserSync.reload]);
   gulp.watch('public/**/*.css',  ['css']);
-  gulp.watch('views/*.jade', ['bs-reload']);
+  gulp.watch('views/**/*.jade', ['bs-reload']);
 });

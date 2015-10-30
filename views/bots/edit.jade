@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+  form(role='form', action="/bots/edit/#{bot.id}", method="post")
+    .form-input
+      input(type='text', name="title", value=bot.title, placeholder='Enter Title')
+    .form-input
+      input(type='text', name="accessToken", value=bot.accessToken, placeholder='accessToken')
+    .form-input
+      input(type='text', name="frequency", value=bot.frequency, placeholder='frequency')
+    .form-input
+      input(type='text', name="channel", value=bot.channel, placeholder='channel')
+    .form-input
+      label
+        input(type='checkbox', name="businessDays", value="1", checked=bot.businessDays)
+        .label-text Business Days?
+    button(type='submit') Update
+
+    a(href='/bots')
+      button(type="button") Cancel

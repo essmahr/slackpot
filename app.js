@@ -14,7 +14,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var dbConfig = require('./lib/db');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var bots = require('./routes/bot');
 
 var app = express();
 
@@ -36,13 +36,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-
 // passport config
 var User = require('./models/User');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+app.use('/', routes);
+app.use('/bots', bots);
 
 
 mongoose.connect(dbConfig.url, function(err) {

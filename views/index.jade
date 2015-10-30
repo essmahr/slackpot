@@ -2,9 +2,6 @@ extends layout
 
 block content
   if (!user)
-    a(href="/login") Login
-    br
-    a(href="/register") Register
+    include ../partials/_login.jade
   if (user)
-    p You are currently logged in as #{user.username}
-    a(href="/logout") Logout
+    include ../partials/_integrationForm.jade

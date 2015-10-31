@@ -2,7 +2,7 @@
 
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -11,7 +11,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var dbConfig = require('./lib/db');
+var dbConfig = require('./lib/dbConfig');
 
 var routes = require('./routes/index');
 var bots = require('./routes/bot');
@@ -46,7 +46,7 @@ app.use('/', routes);
 app.use('/bots', bots);
 
 
-mongoose.connect(dbConfig.url, function(err) {
+mongoose.connect(process.env.MONGOLAB_URI || dbConfig, function(err) {
   if (err) {
     console.log('connection error', err);
   } else {

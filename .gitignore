@@ -1,4 +1,3 @@
 data
 node_modules
-lib/slackToken.js
-lib/db.js
+lib/dbConfig.js

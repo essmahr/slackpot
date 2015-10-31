@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  if (!user)
+  if (!account)
     include ../partials/_login.jade
-  if (user)
+  if (account)
     include ../partials/_integrationForm.jade

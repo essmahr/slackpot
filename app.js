@@ -37,10 +37,10 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // passport config
-var User = require('./models/User');
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+var Account = require('./models/Account');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 app.use('/', routes);
 app.use('/bots', bots);

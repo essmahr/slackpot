@@ -1,14 +1,14 @@
 var express = require('express');
 var passport = require('passport');
-var User = require('../models/User');
+var Account = require('../models/Account');
 var router = express.Router();
 
 router.get('/', function (req, res) {
-  res.render('index', { user : req.user });
+  res.render('index', { account : req.account });
 });
 
 router.get('/login', function(req, res) {
-  res.render('login', { user : req.user });
+  res.render('login', { account : req.account });
 });
 
 router.post('/login', passport.authenticate('local'), function(req, res) {
@@ -25,9 +25,9 @@ router.get('/register', function(req, res) {
 });
 
 router.post('/register', function(req, res) {
-  User.register(new User({ username : req.body.username }), req.body.password, function(err, account) {
+  Account.register(new Account({ username : req.body.username }), req.body.password, function(err, account) {
     if (err) {
-      return res.render('register', { user : user });
+      return res.render('register', { account : account });
     }
 
     passport.authenticate('local')(req, res, function () {

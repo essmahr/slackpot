@@ -1,6 +1,6 @@
 var should = require("should");
 var mongoose = require('mongoose');
-var Account = require("../models/User");
+var Account = require("../models/Account");
 var db;
 
 describe('User', function() {

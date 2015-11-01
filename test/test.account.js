@@ -23,7 +23,7 @@ describe('User', function() {
 
     account.save(function(error) {
       if (error) console.log('error' + error.message);
-      else console.log('no error');
+      else console.log('account created');
       done();
     });
   });
@@ -41,5 +41,4 @@ describe('User', function() {
       done();
     });
   });
-
 });

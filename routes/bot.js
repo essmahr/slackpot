@@ -1,21 +1,25 @@
 var express = require('express');
+var createError = require('http-errors');
 var Bot = require('../models/Bot');
 var router = express.Router();
 var isAuthenticated = require('../isAuthenticated');
+
 
 router.get('/', isAuthenticated, function (req, res) {
   res.redirect('/');
 });
 
 router.get('/new', isAuthenticated, function (req, res) {
-  if (req.user.bots.length) {
-    res.redirect('/')
-  } else {
-    res.render('bots/new');
-  }
+  res.render('bots/new');
+  // Bot.find({_owner: req.user.id}, function(err, bots) {
+  //   if (bots.length) {
+  //     res.redirect('/')
+  //   } else {
+  //   }
+  // });
 });
 
-router.post('/new', isAuthenticated, function (req, res) {
+router.post('/new', isAuthenticated, function (req, res, next) {
 
   var bot = new Bot({
     _owner: req.user.id,
@@ -27,16 +31,16 @@ router.post('/new', isAuthenticated, function (req, res) {
   });
 
   bot.save(function(err) {
-    if (err)
-      console.log(err);
+    if (err) {
       req.flash('error', err.message);
+    }
     res.redirect('/');
   });
+
 });
 
 router.get('/edit/:id', isAuthenticated, function (req, res) {
   Bot.findById(req.params.id, function(err, bot) {
-    console.log(bot);
     if (err)
       res.send(err);
     res.render('bots/edit', {bot: bot});

@@ -28,7 +28,8 @@ router.post('/new', isAuthenticated, function (req, res) {
 
   bot.save(function(err) {
     if (err)
-      return res.send(err);
+      console.log(err);
+      req.flash('error', err.message);
     res.redirect('/');
   });
 });
@@ -55,7 +56,8 @@ router.post('/edit/:id', isAuthenticated, function (req, res) {
       channel: req.body.channel
     }, function(err) {
       if (err)
-        return res.send(err);
+        console.log(err);
+        req.flash('error', err);
       res.redirect('/');
     });
   });

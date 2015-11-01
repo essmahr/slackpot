@@ -50,7 +50,7 @@ app.use('/', routes);
 app.use('/bots', bots);
 
 
-mongoose.connect(process.env.MONGOLAB_URI || dbConfig, function(err) {
+mongoose.connect(process.env.MONGOLAB_URI || 'localhost:27017/slackpotlocal', function(err) {
   if (err) {
     console.log('connection error', err);
   } else {

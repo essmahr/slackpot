@@ -22,16 +22,7 @@ describe('Bot', function() {
       password: 'testy'
     });
 
-    var bot = new Bot({
-      _owner: '123456',
-      title: 'testbot',
-      accessToken: 'test token',
-      frequency: 2,
-      businessDays: false,
-      channel: 'test channel'
-    });
-
-    account.save(function(err, acount) {
+    account.save(function(err, account) {
       if (err) {
         console.log('account creation error: ' + error.message);
       } else {
@@ -51,8 +42,8 @@ describe('Bot', function() {
             console.log('bot creation error: ' + err.message);
           } else {
             console.log('bot account created');
-            done();
           }
+          done();
         });
       }
     });
@@ -60,10 +51,27 @@ describe('Bot', function() {
 
   it('lists bots by user', function(done) {
     Account.findOne({ username: '12345' }, function(err, account) {
-      account.username.should.eql('12345');
       Bot.find({_owner: account.id}, function(err, bots) {
         bots.should.have.length(1);
         bots[0].title.should.eql('testbot');
+        done();
+      });
+    });
+  });
+
+  it('limits bot per user', function(done) {
+    Account.findOne({ username: '12345' }, function(err, account) {
+      var bot = new Bot({
+        _owner: account.id,
+        title: 'testbot 2',
+        accessToken: 'test token 2',
+        frequency: 2,
+        businessDays: false,
+        channel: 'test channel'
+      });
+
+      bot.save(function(err) {
+        should.exist(err);
         done();
       });
     });
@@ -74,5 +82,4 @@ describe('Bot', function() {
       done();
     });
   });
-
 });

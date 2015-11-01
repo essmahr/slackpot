@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 var botSchema = mongoose.Schema({
+  _owner: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
   title: String,
   accessToken: String,
   frequency: Number,

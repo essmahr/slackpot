@@ -1,0 +1,8 @@
+if account.bots
+  ul.bots
+    each bot in account.bots
+      li
+        a(href='/bots/edit/#{bot.id}')
+          = bot.title
+
+a(href='/bots/new') New Bot

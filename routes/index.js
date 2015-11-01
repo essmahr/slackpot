@@ -1,10 +1,22 @@
 var express = require('express');
 var passport = require('passport');
 var Account = require('../models/Account');
+var Bot = require('../models/Bot');
 var router = express.Router();
 
 router.get('/', function (req, res) {
-  res.render('index', { account : req.account });
+  if (req.isAuthenticated()) {
+    Bot.find({_owner: req.user.id}, function(err, bots) {
+      if (err)
+        res.send(err);
+      res.render('bots/index', {
+        account : req.user,
+        bots: bots
+      });
+    });
+  } else {
+    res.render('index');
+  }
 });
 
 router.get('/login', function(req, res) {

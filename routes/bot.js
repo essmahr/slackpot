@@ -4,59 +4,69 @@ var router = express.Router();
 var isAuthenticated = require('../isAuthenticated');
 
 router.get('/', isAuthenticated, function (req, res) {
-  Bot.find(function(err, bots) {
-    if (err) { res.send(err) }
-    console.log(bots);
-    res.render('bots/index', {bots: bots});
-  })
+  res.redirect('/');
 });
 
 router.get('/new', isAuthenticated, function (req, res) {
-  res.render('bots/new');
+  if (req.user.bots.length) {
+    res.redirect('/')
+  } else {
+    res.render('bots/new');
+  }
 });
 
 router.post('/new', isAuthenticated, function (req, res) {
 
-  var bot = new Bot();
-
-  bot.title = req.body.title;
-  bot.accessToken = req.body.accessToken;
-  bot.frequency = req.body.frequency;
-  bot.businessDays = req.body.businessDays;
-  bot.channel = req.body.channel;
+  var bot = new Bot({
+    _owner: req.user.id,
+    title: req.body.title,
+    accessToken: req.body.accessToken,
+    frequency: req.body.frequency,
+    businessDays: req.body.businessDays,
+    channel: req.body.channel
+  });
 
   bot.save(function(err) {
     if (err)
-      res.send(err);
-
-    res.redirect('/bots');
+      return res.send(err);
+    res.redirect('/');
   });
 });
 
 router.get('/edit/:id', isAuthenticated, function (req, res) {
-  var bot = Bot.findById(req.params.id, function(err, bot) {
+  Bot.findById(req.params.id, function(err, bot) {
+    console.log(bot);
     if (err)
       res.send(err);
     res.render('bots/edit', {bot: bot});
   })
 });
 
-router.post('/new', isAuthenticated, function (req, res) {
-
-  var bot = new Bot();
-
-  bot.title = req.body.title;
-  bot.accessToken = req.body.accessToken;
-  bot.frequency = req.body.frequency;
-  bot.businessDays = req.body.businessDays;
-  bot.channel = req.body.channel;
-
-  bot.save(function(err) {
+router.post('/edit/:id', isAuthenticated, function (req, res) {
+  Bot.findById(req.params.id, function(err, bot) {
     if (err)
       res.send(err);
 
-    res.redirect('/bots');
+    bot.update({
+      title: req.body.title,
+      accessToken: req.body.accessToken,
+      frequency: req.body.frequency,
+      businessDays: req.body.businessDays,
+      channel: req.body.channel
+    }, function(err) {
+      if (err)
+        return res.send(err);
+      res.redirect('/');
+    });
   });
+});
+
+router.get('/delete/:id', isAuthenticated, function (req, res) {
+  Bot.remove({_id: req.params.id}, function(err, bot) {
+    if (err)
+      res.send(err);
+    res.redirect('/');
+  })
 });
 
 module.exports = router;

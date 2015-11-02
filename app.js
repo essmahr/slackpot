@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var SlackStrategy = require('passport-slack').Strategy;
 var flash = require('express-flash');
 // var favicon = require('serve-favicon');
 
@@ -42,9 +42,32 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // passport config
 var Account = require('./models/Account');
-passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+passport.use(new SlackStrategy({
+    clientID: process.env.SLACK_CLIENT_ID || require('./config').CLIENT_ID,
+    clientSecret: process.env.SLACK_CLIENT_SECRET || require('./config').CLIENT_SECRET,
+    scope: ['identify', 'read', 'post', 'client'],
+    callbackURL: '/auth/slack/callback'
+  },
+  function(accessToken, refreshToken, profile, done) {
+    Account.findOrCreate({
+      SlackId: profile.id,
+    }, {
+      displayName: profile.displayName,
+      accessToken: accessToken
+    },
+    function (err, user) {
+      return done(err, user);
+    });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 app.use('/', routes);
 app.use('/bots', bots);

@@ -2,10 +2,10 @@ extends ../layout
 
 block content
   if bots
-    ul.bots
-      each bot in bots
-        li
-          a(href='/bots/edit/#{bot.id}')
-            = bot.title
+    each bot in bots
+      a(href='/bots/edit/#{bot.id}')
+        = bot.title
+  else
+    a(href='/bots/new') Create a bot
 
-  a(href='/bots/new') New Bot
+

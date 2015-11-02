@@ -18,8 +18,9 @@ describe('Bot', function() {
 
   beforeEach(function(done) {
     var account = new Account({
-      username: '12345',
-      password: 'testy'
+      SlackId: '12345',
+      displayName: 'testy',
+      accessToken: 'abcde'
     });
 
     account.save(function(err, account) {
@@ -50,7 +51,7 @@ describe('Bot', function() {
   });
 
   it('lists bots by user', function(done) {
-    Account.findOne({ username: '12345' }, function(err, account) {
+    Account.findOne({ displayName: 'testy' }, function(err, account) {
       Bot.find({_owner: account.id}, function(err, bots) {
         bots.should.have.length(1);
         bots[0].title.should.eql('testbot');
@@ -60,7 +61,7 @@ describe('Bot', function() {
   });
 
   it('limits bot per user', function(done) {
-    Account.findOne({ username: '12345' }, function(err, account) {
+    Account.findOne({ displayName: 'testy' }, function(err, account) {
       var bot = new Bot({
         _owner: account.id,
         title: 'testbot 2',

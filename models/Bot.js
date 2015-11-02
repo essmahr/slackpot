@@ -15,7 +15,6 @@ var botSchema = mongoose.Schema({
     required: true
   },
   businessDays: Boolean,
-  accessToken: String,
   channel: String
 });
 

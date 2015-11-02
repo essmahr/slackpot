@@ -17,8 +17,9 @@ describe('User', function() {
 
   beforeEach(function(done) {
     var account = new Account({
-      username: '12345',
-      password: 'testy'
+      SlackId: '12345',
+      displayName: 'testy',
+      accessToken: 'abcde'
     });
 
     account.save(function(error) {
@@ -29,9 +30,8 @@ describe('User', function() {
   });
 
   it('finds a user by username', function(done) {
-    Account.findOne({ username: '12345' }, function(err, account) {
-      account.username.should.eql('12345');
-      console.log("username: ", account.username);
+    Account.findOne({ displayName: 'testy' }, function(err, account) {
+      account.displayName.should.eql('testy');
       done();
     });
   });

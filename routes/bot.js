@@ -4,7 +4,6 @@ var Bot = require('../models/Bot');
 var router = express.Router();
 var isAuthenticated = require('../isAuthenticated');
 
-
 router.get('/', isAuthenticated, function (req, res) {
   res.redirect('/');
 });
@@ -22,9 +21,8 @@ router.get('/new', isAuthenticated, function (req, res) {
 router.post('/new', isAuthenticated, function (req, res, next) {
 
   var bot = new Bot({
-    _owner: req.user.id,
+    _owner: req.user._id,
     title: req.body.title,
-    accessToken: req.body.accessToken,
     frequency: req.body.frequency,
     businessDays: req.body.businessDays,
     channel: req.body.channel
@@ -32,6 +30,7 @@ router.post('/new', isAuthenticated, function (req, res, next) {
 
   bot.save(function(err) {
     if (err) {
+      console.log(err);
       req.flash('error', err.message);
     }
     res.redirect('/');

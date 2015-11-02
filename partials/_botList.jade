@@ -5,4 +5,5 @@ if account.bots
         a(href='/bots/edit/#{bot.id}')
           = bot.title
 
-a(href='/bots/new') New Bot
+else
+  a(href='/bots/new') Create a Bot

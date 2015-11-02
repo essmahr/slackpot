@@ -1,5 +1,6 @@
 var express = require('express');
 var Bot = require('../models/Bot');
+var Channel = require('../models/Channel');
 var router = express.Router();
 var isAuthenticated = require('../isAuthenticated');
 
@@ -21,12 +22,18 @@ router.get('/new', isAuthenticated, function (req, res) {
 
 // new bot!
 router.post('/new', isAuthenticated, function (req, res, next) {
+  var channelId = new Channel(req.body.accessToken)
+    .getId(req.body.channel);
+
   var bot = new Bot({
     _owner: req.user._id,
     title: req.body.title,
     frequency: req.body.frequency,
     businessDays: req.body.businessDays,
-    channel: req.body.channel
+    channel: {
+      name: req.body.channel,
+      id: channelId
+    }
   });
 
   bot.save(function(err) {

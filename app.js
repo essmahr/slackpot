@@ -17,6 +17,7 @@ var flash = require('express-flash');
 
 var routes = require('./routes/index');
 var bots = require('./routes/bot');
+var channel = require('./routes/channel');
 
 var app = express();
 
@@ -80,6 +81,7 @@ app.use(function(req, res, next){
 // set up routes
 app.use('/', routes);
 app.use('/bots', bots);
+app.use('/channels', channel);
 
 
 mongoose.connect(process.env.MONGOLAB_URI || process.env.LOCAL_DB_URI, function(err) {

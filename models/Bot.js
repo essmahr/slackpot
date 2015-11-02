@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var botSchema = mongoose.Schema({
+var botSchema = new Schema({
   _owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
@@ -14,9 +15,17 @@ var botSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  businessDays: Boolean,
-  channel: String
+  channel: {
+    name: String,
+    id: String,
+    required: true,
+  },
+  businessDays: Boolean
 });
+
+botSchema.statics.findByUser = function(userId, cb) {
+  return this.findOne({_owner: userId}, cb);
+}
 
 Bot = mongoose.model('Bot', botSchema);
 

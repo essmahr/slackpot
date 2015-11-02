@@ -51,7 +51,6 @@ describe('Bot', function() {
         console.log('account created');
         createBot(account.id, done);
       }
-
     });
   });
 

@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var SlackStrategy = require('passport-slack').Strategy;
+var cookieSession = require('cookie-session');
 var flash = require('express-flash');
 // var favicon = require('serve-favicon');
 
@@ -19,6 +20,8 @@ var bots = require('./routes/bot');
 
 var app = express();
 
+app.set('trust proxy', 1) // trust first proxy
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -27,11 +30,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(require('express-session')({
-  cookie: { maxAge: 60000 },
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
 }));
 
 app.use(flash());

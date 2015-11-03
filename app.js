@@ -13,8 +13,6 @@ var cookieSession = require('cookie-session');
 var flash = require('express-flash');
 // var favicon = require('serve-favicon');
 
-var dbConfig = require('./lib/dbConfig');
-
 var routes = require('./routes/index');
 var bots = require('./routes/bot');
 
@@ -44,8 +42,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // passport config
 var Account = require('./models/Account');
 passport.use(new SlackStrategy({
-    clientID: process.env.SLACK_CLIENT_ID || require('./config').CLIENT_ID,
-    clientSecret: process.env.SLACK_CLIENT_SECRET || require('./config').CLIENT_SECRET,
+    clientID: process.env.SLACK_CLIENT_ID,
+    clientSecret: process.env.SLACK_CLIENT_SECRET,
     scope: ['identify', 'read', 'post', 'client'],
     callbackURL: '/auth/slack/callback'
   },
@@ -74,7 +72,7 @@ app.use('/', routes);
 app.use('/bots', bots);
 
 
-mongoose.connect(process.env.MONGOLAB_URI || dbConfig, function(err) {
+mongoose.connect(process.env.MONGOLAB_URI || process.env.LOCAL_DB_URI, function(err) {
   if (err) {
     console.log('connection error', err);
   } else {

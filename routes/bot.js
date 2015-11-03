@@ -9,13 +9,13 @@ router.get('/', isAuthenticated, function (req, res) {
 });
 
 router.get('/new', isAuthenticated, function (req, res) {
-  res.render('bots/new');
-  // Bot.find({_owner: req.user.id}, function(err, bots) {
-  //   if (bots.length) {
-  //     res.redirect('/')
-  //   } else {
-  //   }
-  // });
+  Bot.find({_owner: req.user.id}, function(err, bots) {
+    if (bots.length) {
+      res.redirect('/')
+    } else {
+      res.render('bots/new');
+    }
+  });
 });
 
 router.post('/new', isAuthenticated, function (req, res, next) {

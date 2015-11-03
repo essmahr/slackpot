@@ -6,16 +6,17 @@ var router = express.Router();
 
 router.get('/', function (req, res) {
   if (req.isAuthenticated()) {
-    Bot.find({_owner: req.user._id}, function(err, bots) {
+    Bot.findOne({_owner: req.user._id}, function(err, bot) {
       if (err)
         res.send(err);
-      res.render('bots/index', {
-        account : req.user,
-        bots: bots
-      });
+      if (bot) {
+        res.render('bots/view', { bot: bot });
+      } else {
+        res.render('bots/new');
+      }
     });
   } else {
-    res.render('index');
+    res.render('login');
   }
 });
 

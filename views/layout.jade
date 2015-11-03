@@ -7,4 +7,6 @@ html
     - if (messages.error)
       .message
         pre= messages.error
+    if user
+      a(href='/logout') Logout
     block content

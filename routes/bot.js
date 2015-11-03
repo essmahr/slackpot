@@ -3,10 +3,12 @@ var Bot = require('../models/Bot');
 var router = express.Router();
 var isAuthenticated = require('../isAuthenticated');
 
+// redirect to home upon visiting /bots
 router.get('/', isAuthenticated, function (req, res) {
   res.redirect('/');
 });
 
+// only allow new bot if user hasn't any
 router.get('/new', isAuthenticated, function (req, res) {
   Bot.find({_owner: req.user.id}, function(err, bots) {
     if (bots.length) {
@@ -17,8 +19,8 @@ router.get('/new', isAuthenticated, function (req, res) {
   });
 });
 
+// new bot!
 router.post('/new', isAuthenticated, function (req, res, next) {
-
   var bot = new Bot({
     _owner: req.user._id,
     title: req.body.title,
@@ -29,19 +31,23 @@ router.post('/new', isAuthenticated, function (req, res, next) {
 
   bot.save(function(err) {
     if (err) {
-      console.log(err);
       req.flash('error', err.message);
     }
     res.redirect('/');
   });
-
 });
 
+//
 router.get('/edit/:id', isAuthenticated, function (req, res) {
-  Bot.findById(req.params.id, function(err, bot) {
+  Bot.findOne({id: req.params.id}, function(err, bot) {
     if (err)
       res.send(err);
-    res.render('bots/edit', {bot: bot});
+    if (bot) {
+      res.render('bots/edit', {bot: bot});
+    } else {
+      res.status(400);
+      res.render('error', {error: {}, message: 'that bot doesn\'t exist'});
+    }
   })
 });
 
@@ -69,6 +75,7 @@ router.get('/delete/:id', isAuthenticated, function (req, res) {
   Bot.remove({_id: req.params.id}, function(err, bot) {
     if (err)
       res.send(err);
+    req.flash('info', 'Bot deleted.');
     res.redirect('/');
   })
 });

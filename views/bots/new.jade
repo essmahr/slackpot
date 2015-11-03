@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
+  h1 Create a bot
   form(role='form', action="/bots/new", method="post")
     .form-input
       input(type='text', name="title", placeholder='Enter Title')

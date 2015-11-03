@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').load();
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -18,22 +20,23 @@ var bots = require('./routes/bot');
 
 var app = express();
 
-app.set('trust proxy', 1) // trust first proxy
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(flash());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+// auth setup
+app.set('trust proxy', 1); // trust first proxy
+
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
 }));
-
-app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -68,16 +71,19 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
+// attach user var to every request
+app.use(function(req, res, next){
+  res.locals.user = req.user;
+  next();
+});
+
+// set up routes
 app.use('/', routes);
 app.use('/bots', bots);
 
 
 mongoose.connect(process.env.MONGOLAB_URI || process.env.LOCAL_DB_URI, function(err) {
-  if (err) {
-    console.log('connection error', err);
-  } else {
-    console.log('connection successful');
-  }
+  if (err) console.log('connection error', err);
 });
 
 // catch 404 and forward to error handler
@@ -111,7 +117,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
 
 app.listen(port);
 

@@ -1,5 +1,4 @@
 var express = require('express');
-var createError = require('http-errors');
 var Bot = require('../models/Bot');
 var router = express.Router();
 var isAuthenticated = require('../isAuthenticated');

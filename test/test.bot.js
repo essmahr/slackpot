@@ -4,6 +4,26 @@ var Account = require("../models/Account");
 var Bot = require("../models/Bot");
 var db;
 
+function createBot(id, cb) {
+  var bot = new Bot({
+    _owner: id,
+    title: 'testbot',
+    accessToken: 'test token',
+    frequency: 2,
+    businessDays: false,
+    channel: 'test channel'
+  });
+
+  bot.save(function(err) {
+    if (err) {
+      console.log('bot creation error: ' + err.message);
+    } else {
+      console.log('bot account created');
+    }
+    cb();
+  });
+}
+
 describe('Bot', function() {
 
   before(function(done) {
@@ -26,27 +46,12 @@ describe('Bot', function() {
     account.save(function(err, account) {
       if (err) {
         console.log('account creation error: ' + error.message);
+        done();
       } else {
         console.log('account created');
-
-        var bot = new Bot({
-          _owner: account.id,
-          title: 'testbot',
-          accessToken: 'test token',
-          frequency: 2,
-          businessDays: false,
-          channel: 'test channel'
-        });
-
-        bot.save(function(err) {
-          if (err) {
-            console.log('bot creation error: ' + err.message);
-          } else {
-            console.log('bot account created');
-          }
-          done();
-        });
+        createBot(account.id, done);
       }
+
     });
   });
 

@@ -48,7 +48,7 @@ var Account = require('./models/Account');
 passport.use(new SlackStrategy({
     clientID: process.env.SLACK_CLIENT_ID,
     clientSecret: process.env.SLACK_CLIENT_SECRET,
-    scope: ['identify', 'read', 'post', 'client'],
+    scope: ['channels:read', 'users:read', 'chat:write:bot'],
     callbackURL: '/auth/slack/callback'
   },
   function(accessToken, refreshToken, profile, done) {

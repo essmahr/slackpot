@@ -16,9 +16,14 @@ var botSchema = new Schema({
     required: true
   },
   channel: {
-    name: String,
-    id: String,
-    required: true,
+    name: {
+      type: String,
+      required: true
+    },
+    id: {
+      type: String,
+      required: true
+    }
   },
   businessDays: Boolean
 });

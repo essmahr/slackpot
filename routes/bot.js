@@ -5,6 +5,18 @@ var Channel = require('../models/Channel');
 var router = express.Router();
 var isAuthenticated = require('../isAuthenticated');
 
+var validateChannel = function(req, res, next) {
+  var channelId = new Channel(req.user.accessToken).getId(req.body.channel, function(id) {
+    if (id) {
+      req.channelId = id;
+      next();
+    } else {
+      req.flash('error', 'invalid Channel');
+      res.redirect('/');
+    }
+  });
+}
+
 router.get('/', isAuthenticated, function (req, res) {
   res.redirect('/');
 });
@@ -21,9 +33,7 @@ router.get('/new', isAuthenticated, function (req, res) {
 });
 
 // new bot!
-router.post('/new', isAuthenticated, function (req, res, next) {
-  var channelId = new Channel(req.user.accessToken)
-    .getId(req.body.channel);
+router.post('/new', isAuthenticated, validateChannel, function (req, res, next) {
 
   var bot = new Bot({
     _owner: req.user._id,
@@ -32,20 +42,25 @@ router.post('/new', isAuthenticated, function (req, res, next) {
     businessDays: req.body.businessDays,
     channel: {
       name: req.body.channel,
-      id: channelId
+      id: req.channelId
     }
   });
 
   bot.save(function(err, bot) {
     if (err) { req.flash('error', err.message); }
+
     Account.findById(req.user._id, function(err, account) {
       if (err) { req.flash('error', err.message); }
+
       account.bots.push(bot.id),
+
       account.save(function(err) {
         if (err) { req.flash('error', err.message); }
+
         // http://stackoverflow.com/questions/24493243/update-logged-in-user-details-in-session
         req.login(account, function(err) {
           if (err) { req.flash('error', err.message); }
+
           res.redirect('/');
         });
       })
@@ -66,7 +81,7 @@ router.get('/edit/:id', isAuthenticated, function (req, res) {
   })
 });
 
-router.post('/edit/:id', isAuthenticated, function (req, res) {
+router.post('/edit/:id', isAuthenticated, validateChannel, function (req, res) {
   Bot.findById(req.params.id, function(err, bot) {
     if (err)
       res.send(err);
@@ -76,10 +91,12 @@ router.post('/edit/:id', isAuthenticated, function (req, res) {
       accessToken: req.body.accessToken,
       frequency: req.body.frequency,
       businessDays: req.body.businessDays,
-      channel: req.body.channel
+      channel: {
+        name: req.body.channel,
+        id: req.channelId
+      }
     }, function(err) {
       if (err)
-        console.log(err);
         req.flash('error', err);
       res.redirect('/');
     });

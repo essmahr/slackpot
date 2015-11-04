@@ -5,9 +5,9 @@ block content
     .form-input
       input(type='text', name="title", value=bot.title, placeholder='Enter Title')
     .form-input
-      input(type='text', name="frequency", value=bot.frequency, placeholder='frequency')
+      input(type='number', name="frequency", value=bot.frequency, placeholder='frequency')
     .form-input
-      input(type='text', name="channel", value=bot.channel, placeholder='channel')
+      input(type='text', name="channel", value=bot.channel.name, placeholder='channel')
     .form-input
       label
         input(type='checkbox', name="businessDays", value="1", checked=bot.businessDays)

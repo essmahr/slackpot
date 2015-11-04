@@ -23,13 +23,15 @@ channel.prototype.list = function(callback) {
   });
 };
 
-channel.prototype.getId = function(name) {
-  this.list(function(resp){
-    resp.channels.forEach(function(channel, index){
+channel.prototype.getId = function(name, callback) {
+  this.list(function(response) {
+    var channelId = false;
+    response.channels.forEach(function(channel, index){
       if (channel.name === name) {
-        return channel.id;
+        channelId = channel.id;
       }
     });
+    return callback(channelId);
   });
 }
 

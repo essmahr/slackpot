@@ -11,12 +11,11 @@ var isAuthenticated = require('../isAuthenticated');
 
 
 router.get('/', isAuthenticated, function (req, res) {
-
-  Bot.findByUser(req.user.id, function(err, bot) {
+  Bot.findByUser(req.user._id, function(err, bot) {
     if (err) {
       res.send(err);
     } else {
-      new Channel(bot.accessToken)
+      new Channel(req.user.accessToken)
         .list(function(response) {
           res.json(response);
         });
@@ -26,8 +25,9 @@ router.get('/', isAuthenticated, function (req, res) {
 
 
 router.get('/:id', isAuthenticated, function (req, res) {
-  var channelInfo = Channel.getInfo(req.params.id);
-  res.json(channelInfo);
+  var channelInfo = new Channel(req.user.accessToken).getInfo(req.params.id, function(channel) {
+    res.json(channel);
+  });
 });
 
 

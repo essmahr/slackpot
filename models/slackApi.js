@@ -9,6 +9,7 @@ slackApi.prototype.post = function(method, params, cb) {
   var options, post_data, req;
 
   params['token'] = this.token;
+  params['username'] = "slackpot";
 
   post_data = querystring.stringify(params);
 

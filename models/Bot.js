@@ -25,7 +25,8 @@ var botSchema = new Schema({
       required: true
     }
   },
-  businessDays: Boolean
+  businessDays: Boolean,
+  askedUsers: Array
 });
 
 botSchema.statics.findByUser = function(userId, cb) {

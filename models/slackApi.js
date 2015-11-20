@@ -6,14 +6,11 @@ function slackApi(token) {
 }
 
 slackApi.prototype.post = function(method, params, cb) {
-  var options, post_data, req;
-
   params['token'] = this.token;
-  params['username'] = "slackpot";
 
-  post_data = querystring.stringify(params);
+  var post_data = querystring.stringify(params);
 
-  options = {
+  var options = {
     hostname: 'slack.com',
     method: 'POST',
     path: '/api/' + method,
@@ -23,7 +20,7 @@ slackApi.prototype.post = function(method, params, cb) {
     }
   };
 
-  req = https.request(options);
+  var req = https.request(options);
 
   req.on('response', function(res) {
     var buffer;
@@ -61,5 +58,35 @@ slackApi.prototype.post = function(method, params, cb) {
   req.write(post_data);
   return req.end();
 };
+
+slackApi.prototype.sendMessage = function(messageData, callback) {
+
+  messageData['username'] = "slackpot";
+
+  this.post('chat.postMessage', messageData, function(response) {
+    return callback(response);
+  })
+}
+
+slackApi.prototype.getUsersByChannel = function(channelId, callback) {
+  this.post('channels.info', {channel: channelId}, function(response) {
+    if (response.ok) {
+      return callback(response.channel.members);
+    } else {
+      return 'whoops'
+    }
+  })
+}
+
+
+slackApi.prototype.getUserByID = function(userId, callback) {
+  this.post('users.info', {user: userId}, function(response) {
+    if (response.ok) {
+      return callback(response.user);
+    } else {
+      return callback('error');
+    }
+  })
+}
 
 module.exports = slackApi;

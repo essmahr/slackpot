@@ -1,4 +1,6 @@
+TESTS = test/*.js test/**/*.js test/**/**/*.js
+
 test:
-	@./node_modules/.bin/mocha
+	@NODE_ENV=test NODE_PATH=./config:./app/controllers ./node_modules/.bin/ava $(TESTS)
 
 .PHONY: test
